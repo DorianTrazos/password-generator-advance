@@ -6,9 +6,34 @@ const lengthTextElement = document.getElementById('length-text');
 const rangeElement = document.getElementById('range');
 const buttonGenerateElement = document.getElementById('generate-password');
 
-const allowedCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890!@#$%^&*()_+-={}[]:;<>,.?/';
+const uppercaseInputElement = document.getElementById('uppercase');
+const lowercaseInputElement = document.getElementById('lowercase');
+const numbersInputElement = document.getElementById('numbers');
+const symbolsInputElement = document.getElementById('symbols');
+const asterisksInputElement = document.getElementById('asterisks');
+
+let allowedCharacters = '';
+
+const passwordOptions = {
+  uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  lowercase: 'abcdefghijklmnopqrstuvwxyz',
+  numbers: '0123456789',
+  symbols: '!@#$%^&*()_+-={}[]:;<>,.?/',
+  asterisks: '**************'
+};
 
 let passwordLength = rangeElement.value;
+
+const setAllowedCharacters = event => {
+  const allCheckbox = document.querySelectorAll('input:checked');
+
+  allowedCharacters = '';
+
+  allCheckbox.forEach(input => {
+    const id = input.id;
+    allowedCharacters += passwordOptions[id];
+  });
+};
 
 const generateRandomNumber = () => {
   return Math.floor(Math.random() * allowedCharacters.length);
@@ -18,7 +43,6 @@ const generatePassword = () => {
   let newPassword = '';
   for (let i = 0; i < passwordLength; i++) {
     const randomNumber = generateRandomNumber();
-    // newPassword += allowedCharacters.charAt(randomNumber);
     newPassword += allowedCharacters[randomNumber];
   }
   return newPassword;
@@ -34,5 +58,11 @@ const setPasswordLength = event => {
 };
 
 rangeElement.addEventListener('input', setPasswordLength);
+
+uppercaseInputElement.addEventListener('change', setAllowedCharacters);
+lowercaseInputElement.addEventListener('change', setAllowedCharacters);
+numbersInputElement.addEventListener('change', setAllowedCharacters);
+symbolsInputElement.addEventListener('change', setAllowedCharacters);
+asterisksInputElement.addEventListener('change', setAllowedCharacters);
 
 buttonGenerateElement.addEventListener('click', printPassword);
