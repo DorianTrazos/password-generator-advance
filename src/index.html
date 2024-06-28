@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- PON UN FAVICON!!! -->
+    <link rel="icon" type="image/svg+xml" href="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- CAMBIA EL TITLE!!! -->
+    <title>Vite Template</title>
+  </head>
+  <body>
+    <div class="password-generator">
+      <input type="text" class="password" id="password" placeholder="P4$5W0RD!" readonly />
+      <div>
+        <label for="range" class="range-label">LENGTH: <span id="length-text">16</span></label>
+      </div>
+      <div class="range-container">
+        <span>4</span>
+        <input id="range" type="range" class="range-input" min="4" max="32" step="1" value="16" />
+        <span>32</span>
+      </div>
+
+      <button id="generate-password" class="button">Generate Password</button>
+    </div>
+    <script type="module" src="./js/index.js"></script>
+  </body>
+</html>
