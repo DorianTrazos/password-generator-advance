@@ -10,7 +10,6 @@ const uppercaseInputElement = document.getElementById('uppercase');
 const lowercaseInputElement = document.getElementById('lowercase');
 const numbersInputElement = document.getElementById('numbers');
 const symbolsInputElement = document.getElementById('symbols');
-const asterisksInputElement = document.getElementById('asterisks');
 
 let allowedCharacters = '';
 
@@ -19,7 +18,6 @@ const passwordOptions = {
   lowercase: 'abcdefghijklmnopqrstuvwxyz',
   numbers: '0123456789',
   symbols: '!@#$%^&*()_+-={}[]:;<>,.?/',
-  asterisks: '**************'
 };
 
 let passwordLength = rangeElement.value;
