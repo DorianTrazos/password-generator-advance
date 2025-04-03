@@ -1,4 +1,3 @@
-// El styles lo importamos aquí, ya se carga después al compilar todo
 import '../scss/styles.scss';
 
 const passwordElement = document.getElementById('password');
@@ -11,56 +10,90 @@ const lowercaseInputElement = document.getElementById('lowercase');
 const numbersInputElement = document.getElementById('numbers');
 const symbolsInputElement = document.getElementById('symbols');
 
-let allowedCharacters = '';
-
 const passwordOptions = {
   uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
   lowercase: 'abcdefghijklmnopqrstuvwxyz',
   numbers: '0123456789',
-  symbols: '!@#$%^&*()_+-={}[]:;<>,.?/',
+  symbols: '!@#$%^&*()_+-={}[]:;<>,.?/'
 };
 
 let passwordLength = rangeElement.value;
-
-const setAllowedCharacters = event => {
-  const allCheckbox = document.querySelectorAll('input:checked');
-
-  allowedCharacters = '';
-
-  allCheckbox.forEach(input => {
-    const id = input.id;
-    allowedCharacters += passwordOptions[id];
-  });
-};
-
-const generateRandomNumber = () => {
-  return Math.floor(Math.random() * allowedCharacters.length);
-};
-
-const generatePassword = () => {
-  let newPassword = '';
-  for (let i = 0; i < passwordLength; i++) {
-    const randomNumber = generateRandomNumber();
-    newPassword += allowedCharacters[randomNumber];
-  }
-  return newPassword;
-};
-
-const printPassword = () => {
-  passwordElement.value = generatePassword();
-};
 
 const setPasswordLength = event => {
   passwordLength = event.target.value;
   lengthTextElement.textContent = passwordLength;
 };
 
+const getSelectedGroups = () => {
+  const selected = [];
+
+  if (uppercaseInputElement.checked) selected.push('uppercase');
+  if (lowercaseInputElement.checked) selected.push('lowercase');
+  if (numbersInputElement.checked) selected.push('numbers');
+  if (symbolsInputElement.checked) selected.push('symbols');
+
+  return selected;
+};
+
+const getRandomChar = string => {
+  const index = Math.floor(Math.random() * string.length);
+  return string[index];
+};
+
+const shuffleString = str => {
+  return str
+    .split('')
+    .sort(() => Math.random() - 0.5)
+    .join('');
+};
+
+const generatePassword = () => {
+  const selectedGroups = getSelectedGroups();
+
+  if (selectedGroups.length === 0) {
+    alert('Selecciona al menos una opción');
+    return '';
+  }
+
+  if (passwordLength < selectedGroups.length) {
+    alert('La longitud debe ser al menos igual al número de opciones seleccionadas');
+    return '';
+  }
+
+  let password = '';
+
+  // Al menos un carácter de cada grupo
+  selectedGroups.forEach(group => {
+    password += getRandomChar(passwordOptions[group]);
+  });
+
+  // El resto de caracteres
+  const allChars = selectedGroups.map(g => passwordOptions[g]).join('');
+  const remaining = passwordLength - password.length;
+
+  for (let i = 0; i < remaining; i++) {
+    password += getRandomChar(allChars);
+  }
+
+  return shuffleString(password);
+};
+
+const printPassword = () => {
+  passwordElement.value = generatePassword();
+};
+
+const updateButtonState = () => {
+  const hasSelection =
+    uppercaseInputElement.checked || lowercaseInputElement.checked || numbersInputElement.checked || symbolsInputElement.checked;
+
+  buttonGenerateElement.disabled = !hasSelection;
+};
+
+// Eventos
 rangeElement.addEventListener('input', setPasswordLength);
-
-uppercaseInputElement.addEventListener('change', setAllowedCharacters);
-lowercaseInputElement.addEventListener('change', setAllowedCharacters);
-numbersInputElement.addEventListener('change', setAllowedCharacters);
-symbolsInputElement.addEventListener('change', setAllowedCharacters);
-asterisksInputElement.addEventListener('change', setAllowedCharacters);
-
 buttonGenerateElement.addEventListener('click', printPassword);
+
+uppercaseInputElement.addEventListener('change', updateButtonState);
+lowercaseInputElement.addEventListener('change', updateButtonState);
+numbersInputElement.addEventListener('change', updateButtonState);
+symbolsInputElement.addEventListener('change', updateButtonState);
